@@ -1,18 +1,19 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, div, p, span, text)
+import Html exposing (Html, div, p, text)
 
 
 
 -- APP
 
 
+main : Program () Model msg
 main =
     Browser.sandbox
         { init = initialModel
         , view = view
-        , update = \msg -> \model -> model
+        , update = \_ -> \model -> model
         }
 
 
@@ -66,11 +67,7 @@ card2 =
     Card Double Green Striped Oval
 
 
-card3 : Card
-card3 =
-    Card Triple Purple Filled Squiggle
-
-
+initialModel : Model
 initialModel =
     [ card1, card2 ]
 
@@ -209,7 +206,7 @@ remainingShape first second =
 
 
 view : Model -> Html msg
-view model =
+view _ =
     div []
         (List.map
             displayedCard
