@@ -11,7 +11,8 @@ import Card
         , cardNeededForSet
         , displayedCard
         )
-import Html exposing (Html, div)
+import Html exposing (Html, div, section)
+import Html.Attributes exposing (class)
 
 
 
@@ -56,7 +57,7 @@ initialModel =
 
 view : Model -> Html msg
 view _ =
-    div []
+    section [ class "wrapper" ]
         (List.map
             displayedCard
             [ card1, card2, cardNeededForSet card1 card2 ]

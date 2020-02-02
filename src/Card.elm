@@ -1,6 +1,15 @@
-module Card exposing (Card, ColorAttribute(..), CountAttribute(..), FillAttribute(..), ShapeAttribute(..), cardNeededForSet, displayedCard)
+module Card exposing
+    ( Card
+    , ColorAttribute(..)
+    , CountAttribute(..)
+    , FillAttribute(..)
+    , ShapeAttribute(..)
+    , cardNeededForSet
+    , displayedCard
+    )
 
-import Html exposing (Html, p, text)
+import Html exposing (Attribute, Html, div, text)
+import Html.Attributes exposing (class)
 
 
 type CountAttribute
@@ -168,14 +177,55 @@ remainingShape first second =
             Squiggle
 
 
+cardAttributes : Card -> List String
+cardAttributes card =
+    [ countToString card.count
+    , colorToString card.color
+    , fillToString card.fill
+    , shapeToString card.shape
+    ]
+
+
+cardText : Card -> Html msg
+cardText card =
+    let
+        characters =
+            case card.shape of
+                Diamond ->
+                    List.repeat (countToInt card.count) "♢"
+
+                Oval ->
+                    List.repeat (countToInt card.count) "⬯"
+
+                Squiggle ->
+                    List.repeat (countToInt card.count) "∿"
+    in
+    String.join "" characters |> text
+
+
+countToInt : CountAttribute -> Int
+countToInt count =
+    case count of
+        Single ->
+            1
+
+        Double ->
+            2
+
+        Triple ->
+            3
+
+
 displayedCard : Card -> Html msg
 displayedCard card =
-    p []
-        [ text (countToString card.count ++ " ")
-        , text (colorToString card.color ++ " ")
-        , text (fillToString card.fill ++ " ")
-        , text (shapeToString card.shape)
-        ]
+    div (cardClasses card) [ cardText card ]
+
+
+cardClasses : Card -> List (Attribute msg)
+cardClasses card =
+    List.map String.toLower (cardAttributes card)
+        |> List.map class
+        |> List.append [ class "card" ]
 
 
 countToString : CountAttribute -> String
