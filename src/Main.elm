@@ -8,23 +8,26 @@ import Card
         , CountAttribute(..)
         , FillAttribute(..)
         , ShapeAttribute(..)
-        , cardNeededForSet
         , displayedCard
         )
-import Html exposing (Html, div, section)
+import Html exposing (Html, section)
 import Html.Attributes exposing (class)
+import List.Extra
+import Random
+import Random.List exposing (shuffle)
 
 
 
 -- APP
 
 
-main : Program () Model msg
+main : Program () Model Msg
 main =
-    Browser.sandbox
+    Browser.element
         { init = initialModel
         , view = view
-        , update = \_ -> \model -> model
+        , update = update
+        , subscriptions = \_ -> Sub.none
         }
 
 
@@ -36,19 +39,24 @@ type alias Model =
     List Card
 
 
-card1 : Card
-card1 =
-    Card Single Red Empty Diamond
+initialModel : () -> ( Model, Cmd Msg )
+initialModel _ =
+    ( [], Random.generate NewBoard (shuffle allCards) )
 
 
-card2 : Card
-card2 =
-    Card Double Green Striped Oval
+
+-- UPDATE
 
 
-initialModel : Model
-initialModel =
-    [ card1, card2 ]
+type Msg
+    = NewBoard (List Card)
+
+
+update : Msg -> Model -> ( Model, Cmd msg )
+update msg _ =
+    case msg of
+        NewBoard cards ->
+            ( cards, Cmd.none )
 
 
 
@@ -56,9 +64,24 @@ initialModel =
 
 
 view : Model -> Html msg
-view _ =
+view model =
     section [ class "wrapper" ]
         (List.map
             displayedCard
-            [ card1, card2, cardNeededForSet card1 card2 ]
+            (randomBoard model)
         )
+
+
+randomBoard : Model -> List Card
+randomBoard model =
+    List.take 12 model
+
+
+allCards : List Card
+allCards =
+    List.Extra.lift4
+        Card
+        [ Single, Double, Triple ]
+        [ Red, Green, Purple ]
+        [ Empty, Striped, Filled ]
+        [ Diamond, Oval, Squiggle ]

@@ -192,10 +192,10 @@ cardText card =
         characters =
             case card.shape of
                 Diamond ->
-                    List.repeat (countToInt card.count) "♢"
+                    List.repeat (countToInt card.count) "♦︎"
 
                 Oval ->
-                    List.repeat (countToInt card.count) "⬯"
+                    List.repeat (countToInt card.count) "⬮"
 
                 Squiggle ->
                     List.repeat (countToInt card.count) "∿"
