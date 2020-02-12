@@ -9,11 +9,12 @@ import Card
         , FillAttribute(..)
         , ShapeAttribute(..)
         , cardNeededForSet
+        , cardToString
         , displayedCard
         )
 import Html exposing (Html, div, h2, p, section, text)
 import Html.Attributes exposing (class)
-import List.Extra exposing (uniquePairs)
+import List.Extra exposing (uniqueBy, uniquePairs)
 import Random
 import Random.List exposing (shuffle)
 
@@ -85,8 +86,19 @@ view model =
                 model
             )
         , h2 [] [ text "solutions" ]
-        , List.map (List.map displayedCard) (solutions model) |> List.map (p []) |> section [ class "solutions" ]
+        , List.map (List.map displayedCard) (uniqueSolutions model) |> List.map (p []) |> section [ class "solutions" ]
         ]
+
+
+uniqueSolutions : Model -> List (List Card)
+uniqueSolutions cards =
+    uniqueBy matchToStringList (solutions cards)
+
+
+matchToStringList : List Card -> List String
+matchToStringList cards =
+    List.map cardToString cards
+        |> List.sort
 
 
 solutions : Model -> List (List Card)

@@ -5,6 +5,7 @@ module Card exposing
     , FillAttribute(..)
     , ShapeAttribute(..)
     , cardNeededForSet
+    , cardToString
     , displayedCard
     )
 
@@ -226,6 +227,11 @@ cardClasses card =
     List.map String.toLower (cardAttributes card)
         |> List.map class
         |> List.append [ class "card" ]
+
+
+cardToString : Card -> String
+cardToString card =
+    String.join " " (cardAttributes card)
 
 
 countToString : CountAttribute -> String
